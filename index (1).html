@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blood Bridge – Star Community Blood Donation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600&family=Hind+Siliguri:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F7FB; --surface:#FFFFFF; --ink:#181C3A; --muted:#5B6180; --line:#DCE0EC;
+  --blood:#B0122E; --blood-ink:#FFFFFF; --blood-soft:#FBE6EA;
+  --star:#F0B429; --ok:#1E7B4F; --ok-soft:#DDF1E6; --warn:#9A5B00; --warn-soft:#FFF0D0;
+  --shadow:0 1px 0 rgba(24,28,58,.06);
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Public Sans','Segoe UI',system-ui,sans-serif;
+  --bn:'Hind Siliguri','Noto Sans Bengali','Segoe UI',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101229; --surface:#191C3B; --ink:#EEF0FA; --muted:#A3A9C8; --line:#2E3260;
+    --blood:#FF5C77; --blood-ink:#1A0409; --blood-soft:#3A1524;
+    --ok:#5FD39A; --ok-soft:#153A2B; --warn:#F5C25C; --warn-soft:#3A2D10;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101229; --surface:#191C3B; --ink:#EEF0FA; --muted:#A3A9C8; --line:#2E3260;
+  --blood:#FF5C77; --blood-ink:#1A0409; --blood-soft:#3A1524;
+  --ok:#5FD39A; --ok-soft:#153A2B; --warn:#F5C25C; --warn-soft:#3A2D10;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.6}
+img,svg{max-width:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;letter-spacing:-.02em}
+h1{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:800;max-width:15ch}
+h2{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:800}
+h3{font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--star);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.muted{color:var(--muted)}
+.sr{position:absolute;left:-9999px}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.25rem}
+.brand small{display:block;font-family:var(--body);font-weight:500;font-size:.72rem;color:var(--muted);letter-spacing:0;line-height:1}
+nav{margin-left:auto;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav a{padding:8px 12px;border-radius:8px;text-decoration:none;font-weight:500;font-size:.94rem;white-space:nowrap}
+nav a:hover{background:var(--blood-soft)}
+nav a.cta{background:var(--blood);color:var(--blood-ink);font-weight:600}
+nav a.cta:hover{background:var(--blood);filter:brightness(1.08)}
+
+/* hero */
+.hero{padding:56px 0 40px}
+.hero .bn{font-family:var(--bn);font-weight:600;color:var(--blood);font-size:1.15rem;margin-bottom:10px}
+.hero p.lead{margin-top:18px;max-width:52ch;font-size:1.1rem;color:var(--muted)}
+.finder{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.finder legend,.finder .lbl{font-weight:600;font-size:.95rem;margin-bottom:10px;padding:0}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (min-width:720px){.tiles{grid-template-columns:repeat(8,1fr)}}
+.tile{border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:14px 0 12px;cursor:pointer;font-family:var(--display);font-weight:800;font-size:1.7rem;line-height:1;letter-spacing:-.03em;text-align:center;transition:transform .12s, background .12s, border-color .12s}
+.tile small{display:block;font-family:var(--body);font-weight:500;font-size:.7rem;letter-spacing:0;color:var(--muted);margin-top:6px}
+.tile:hover{border-color:var(--blood)}
+.tile[aria-checked="true"]{background:var(--blood);border-color:var(--blood);color:var(--blood-ink);transform:translateY(-2px)}
+.tile[aria-checked="true"] small{color:inherit;opacity:.85}
+.filters{display:flex;flex-wrap:wrap;gap:16px;align-items:end;margin-top:18px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:600;font-size:.9rem}
+select,input[type=text],input[type=tel],input[type=number],input[type=date],textarea{background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;width:100%}
+select{min-width:190px}
+.check{display:flex;gap:10px;align-items:center;min-height:44px;font-size:.94rem}
+.check input{width:20px;height:20px;accent-color:var(--blood)}
+.results{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.donor{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.gbadge{display:grid;place-items:center;min-width:52px;height:52px;border-radius:12px;background:var(--blood-soft);color:var(--blood);font-family:var(--display);font-weight:800;font-size:1.3rem}
+.donor strong{display:block}
+.donor small{color:var(--muted)}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:600}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.wait{background:var(--warn-soft);color:var(--warn)}
+.pill.exact{background:var(--star);color:#3A2A00}
+.btn{border:0;border-radius:10px;padding:10px 16px;min-height:44px;font-weight:600;cursor:pointer;background:var(--ink);color:var(--surface)}
+.btn.red{background:var(--blood);color:var(--blood-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:.88rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.empty{padding:22px;border:1.5px dashed var(--line);border-radius:14px;text-align:center;color:var(--muted)}
+.empty .btn{margin-top:12px}
+.summary{margin-top:18px;font-weight:600}
+
+/* sections */
+section.block{padding:64px 0;border-top:1px solid var(--line)}
+.head{display:grid;gap:10px;margin-bottom:28px;max-width:60ch}
+.head p{color:var(--muted)}
+.split{display:grid;gap:28px}
+@media (min-width:900px){.split{grid-template-columns:1.05fr .95fr;align-items:start}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.grid2{display:grid;gap:14px}
+@media (min-width:560px){.grid2{grid-template-columns:1fr 1fr}}
+.full{grid-column:1/-1}
+.flow{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.flow li{display:grid;grid-template-columns:28px 1fr;gap:12px;padding-bottom:18px;position:relative;color:var(--muted)}
+.flow li::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
+.flow li:last-child{padding-bottom:0}.flow li:last-child::before{display:none}
+.flow .dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.flow li.done{color:var(--ink)}
+.flow li.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.flow li.done::before{background:var(--ok)}
+.flow b{display:block;font-family:var(--display)}
+.flow span.s{font-size:.9rem}
+.note{font-size:.86rem;color:var(--muted);margin-top:12px}
+.alert{padding:12px 14px;border-radius:12px;background:var(--ok-soft);color:var(--ok);font-weight:600;margin-top:14px}
+
+/* tables */
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--line);font-size:.94rem}
+th:first-child,td:first-child{text-align:left}
+th{font-family:var(--display);font-weight:700;background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.u{font-weight:600}
+td.low{background:var(--blood-soft);color:var(--blood)}
+td.mid{background:var(--warn-soft);color:var(--warn)}
+td.good{color:var(--ok)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:.86rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+.rules{display:grid;gap:14px}
+@media (min-width:700px){.rules{grid-template-columns:repeat(3,1fr)}}
+.rules .card h3{margin-bottom:8px}
+.rules ul{margin:0;padding-left:1.1rem;color:var(--muted)}
+.rules li{margin:4px 0}
+
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+@media (min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat b{display:block;font-family:var(--display);font-size:2rem;line-height:1.1}
+.stat span{color:var(--muted);font-size:.9rem}
+.adm{display:grid;gap:22px}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper button{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;font-weight:700}
+
+footer{border-top:1px solid var(--line);padding:32px 0 40px;color:var(--muted);font-size:.92rem}
+footer .wrap{display:grid;gap:8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---- visual refresh ---- */
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+.btn.star{background:var(--star);color:#3A2A00}
+.btn.line{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45)}
+.hero{background:linear-gradient(160deg,#181C3A 0%,#2B1236 100%);color:#fff;padding:52px 0 120px;position:relative;overflow:hidden}
+.hero-grid{display:grid;gap:28px;align-items:center}
+@media (min-width:900px){.hero-grid{grid-template-columns:1.05fr .95fr}}
+.hero h1{color:#fff}
+.hero p.lead{color:#CBD0EA;margin-top:18px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.hero-facts{display:flex;flex-wrap:wrap;gap:26px;margin:30px 0 0;padding:0;list-style:none}
+.hero-facts b{display:block;font-family:var(--display);font-size:1.7rem;line-height:1.1;color:var(--star)}
+.hero-facts span{font-size:.88rem;color:#CBD0EA}
+.hero-art svg{width:100%;height:auto;display:block;max-height:440px}
+.finder-sec{margin-top:-72px;position:relative;z-index:2;padding-bottom:64px}
+.finder-sec .finder{margin-top:0;box-shadow:0 14px 40px rgba(16,18,41,.22)}
+.icon{display:grid;place-items:center;width:72px;height:72px;border-radius:20px;background:var(--blood-soft);color:var(--blood);flex:none}
+.icon svg{width:44px;height:44px}
+.icon.sm{width:58px;height:58px;border-radius:16px}
+.icon.sm svg{width:36px;height:36px}
+.how{display:grid;gap:16px}
+@media (min-width:800px){.how{grid-template-columns:repeat(3,1fr)}}
+.how .card{display:grid;gap:12px;justify-items:start;align-content:start}
+.day{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:12px}
+@media (min-width:600px){.day{grid-template-columns:1fr 1fr}}
+@media (min-width:1000px){.day{grid-template-columns:repeat(4,1fr)}}
+.day li{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.day b{display:block;font-family:var(--display)}
+.day span.t,.day div span{font-size:.9rem;color:var(--muted)}
+.cta-band{background:linear-gradient(135deg,#B0122E,#6E0A1E);color:#fff;padding:56px 0}
+.band{display:grid;gap:24px;align-items:center}
+@media (min-width:800px){.band{grid-template-columns:1fr 220px}}
+.band h2{color:#fff}
+.band p{margin:10px 0 20px;color:#FBD9DF;max-width:46ch}
+.band svg{width:180px;height:auto;justify-self:center}
+.adm>*,.split>*,.hero-grid>*,.band>*{min-width:0}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="Blood Bridge home">
+      <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C16 2 5 14.5 5 21a11 11 0 0 0 22 0C27 14.5 16 2 16 2z" fill="#B0122E"/><path d="M16 12.2l1.9 3.9 4.3.6-3.1 3 .8 4.3-3.9-2.1-3.9 2.1.8-4.3-3.1-3 4.3-.6z" fill="#F0B429"/></svg>
+      <span>Blood Bridge<small>with Star blood group</small></span>
+    </a>
+    <nav aria-label="Main">
+      <a href="#find">Find donors</a>
+      <a href="#request">Request blood</a>
+      <a href="#register">Become a donor</a>
+      <a href="#banks">Blood banks</a>
+      <a href="#guide">Guidelines</a>
+      <a href="#admin">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Find the right blood group, close to home.</h1>
+      <p class="lead">Blood Bridge connects volunteer donors, families and blood banks in one place. Choose the blood group you need and see who is ready to give right now.</p>
+      <div class="hero-cta">
+        <a class="btn star" href="#find">Find a donor</a>
+        <a class="btn line" href="#request">Request blood</a>
+        <a class="btn line" href="#register">Become a donor</a>
+      </div>
+      <ul class="hero-facts">
+        <li><b>3 lives</b><span>one donation can help</span></li>
+        <li><b>10 min</b><span>the donation itself</span></li>
+        <li><b>3 months</b><span>until you can give again</span></li>
+      </ul>
+    </div>
+    <div class="hero-art"><svg viewBox="0 0 480 400" role="img" aria-label="Illustration: a blood drop with a star floating above a bridge, with three donors, a heart and a blood bag">
+<defs>
+<radialGradient id="glow" cx="50%" cy="42%" r="55%"><stop offset="0" stop-color="#FF5C77" stop-opacity=".38"/><stop offset="1" stop-color="#FF5C77" stop-opacity="0"/></radialGradient>
+<linearGradient id="dropg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0405F"/><stop offset="1" stop-color="#A50F2A"/></linearGradient>
+</defs>
+<circle cx="240" cy="190" r="190" fill="url(#glow)"/>
+<circle cx="240" cy="190" r="152" fill="none" stroke="#fff" stroke-opacity=".14" stroke-dasharray="3 9" stroke-width="2"/>
+<g stroke="#fff" stroke-linecap="round" fill="none">
+<path d="M40 340Q240 100 440 340" stroke-width="6"/>
+<g stroke-width="2.5" stroke-opacity=".65"><path d="M90 340V288"/><path d="M140 340V250"/><path d="M190 340V228"/><path d="M240 340V220"/><path d="M290 340V228"/><path d="M340 340V250"/><path d="M390 340V288"/></g>
+<path d="M18 342H462" stroke-width="9"/>
+<path d="M70 348V392M410 348V392" stroke-width="8" stroke-opacity=".5"/>
+<path d="M0 394H480" stroke-width="3" stroke-opacity=".3"/>
+</g>
+<g transform="translate(168 51) scale(4.5)"><path d="M16 2C16 2 5 14.5 5 21a11 11 0 0 0 22 0C27 14.5 16 2 16 2z" fill="url(#dropg)"/><path d="M10.5 19c0-2.2 1-4.2 2.3-5.8" stroke="#fff" stroke-opacity=".35" stroke-width="1.4" stroke-linecap="round" fill="none"/><path d="M16 12.2l1.9 3.9 4.3.6-3.1 3 .8 4.3-3.9-2.1-3.9 2.1.8-4.3-3.1-3 4.3-.6z" fill="#F0B429"/></g>
+<g transform="translate(58 112) scale(4.5)"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z" fill="#FF5C77"/></g>
+<g>
+<path d="M373 120V98" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+<rect x="340" y="120" width="66" height="98" rx="16" fill="#B0122E" stroke="#fff" stroke-width="3"/>
+<rect x="358" y="112" width="30" height="12" rx="4" fill="#fff"/>
+<path d="M353 146h40" stroke="#fff" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+<text x="373" y="190" text-anchor="middle" font-family="Bricolage Grotesque,Segoe UI,sans-serif" font-weight="800" font-size="30" fill="#fff">O+</text>
+<path d="M373 218v18q0 14 14 14" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+</g>
+<g><circle cx="130" cy="300" r="11" fill="#F0B429"/><path d="M118 340v-22a12 12 0 0 1 24 0v22z" fill="#fff"/>
+<circle cx="240" cy="296" r="11" fill="#FF9FB0"/><path d="M228 340v-24a12 12 0 0 1 24 0v24z" fill="#fff"/>
+<circle cx="350" cy="300" r="11" fill="#8FB4FF"/><path d="M338 340v-22a12 12 0 0 1 24 0v22z" fill="#fff"/></g>
+<path transform="translate(200 36) scale(1.1)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/><path transform="translate(300 74) scale(0.8)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/><path transform="translate(438 96) scale(1)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/><path transform="translate(46 64) scale(0.9)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/><path transform="translate(430 250) scale(0.6)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/>
+</svg></div>
+  </div>
+</section>
+
+<section class="finder-sec" id="find">
+  <div class="wrap">
+    <div class="finder">
+      <fieldset>
+        <legend>Blood group needed</legend>
+        <div class="tiles" role="radiogroup" aria-label="Blood group needed" id="tiles"></div>
+      </fieldset>
+      <div class="filters">
+        <div class="field">
+          <label for="areaSel">Area</label>
+          <select id="areaSel"></select>
+        </div>
+        <label class="check"><input type="checkbox" id="compat" checked> Include compatible groups</label>
+      </div>
+      <p class="summary" id="summary" aria-live="polite"></p>
+      <ul class="results" id="results"></ul>
+      <p class="note">Phone numbers stay hidden until you choose Show number. Please contact donors only for a real need.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="head"><h2>How Blood Bridge works</h2><p>From sign-up to a donation that reaches a patient, in three simple parts.</p></div>
+    <div class="how">
+      <div class="card"><span class="icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="21" cy="16" r="7"/><path d="M7 41c0-8.5 6-13.5 14-13.5 3 0 5.600.7 7.700 2"/><path d="M38 24v12M32 30h12"/></svg></span><h3>Donors register</h3><p class="muted">Volunteers sign up with their blood group, area and last donation date. Only the basics are stored.</p></div>
+      <div class="card"><span class="icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5S11 20 11 28a13 13 0 0 0 26 0C37 20 24 5 24 5z"/><path d="M18 28l5 5 8-10"/></svg></span><h3>Families get matched</h3><p class="muted">A request finds eligible donors with a compatible group, starting with the patient's own area.</p></div>
+      <div class="card"><span class="icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 41S8 31 8 19a9 9 0 0 1 16-5.600A9 9 0 0 1 40 19c0 12-16 22-16 22z"/><path d="M24 20s-5 5.500-5 9a5 5 0 0 0 10 0c0-3.500-5-9-5-9z" fill="currentColor" stroke="none"/></svg></span><h3>A life is saved</h3><p class="muted">The donor gives at the blood bank and the team records it, so stock stays up to date.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="request">
+  <div class="wrap split">
+    <div>
+      <div class="head">
+        <h2>Request blood in an emergency</h2>
+        <p>Fill in the form. We check the hospital details, then alert eligible donors with a matching group, starting with those in the same area.</p>
+      </div>
+      <form class="card grid2" id="reqForm">
+        <div class="field"><label for="rPatient">Patient name</label><input type="text" id="rPatient" required autocomplete="off"></div>
+        <div class="field"><label for="rGroup">Blood group</label><select id="rGroup" required></select></div>
+        <div class="field"><label for="rUnits">Units needed</label><input type="number" id="rUnits" min="1" max="10" value="1" required></div>
+        <div class="field"><label for="rUrgency">Needed within</label>
+          <select id="rUrgency"><option>Right now</option><option>Today</option><option>Within 3 days</option></select></div>
+        <div class="field"><label for="rHospital">Hospital</label><input type="text" id="rHospital" required autocomplete="off"></div>
+        <div class="field"><label for="rArea">Area</label><select id="rArea" required></select></div>
+        <div class="field full"><label for="rContact">Your phone number</label><input type="tel" id="rContact" required inputmode="tel" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" title="11-digit Bangladesh mobile number, e.g. 01712345678"></div>
+        <div class="full"><button class="btn red" type="submit">Send emergency request</button></div>
+      </form>
+    </div>
+    <div class="card" aria-live="polite">
+      <h3>What happens after you send</h3>
+      <ol class="flow" id="flow" style="margin-top:16px"></ol>
+      <div id="reqResult"></div>
+      <p class="note">Demo simulation: real SMS and email alerts need a messaging gateway set up with the sponsor.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="register">
+  <div class="wrap split">
+    <div>
+      <div class="head">
+        <h2>Become a donor</h2>
+        <p>Register once. We only keep your name, blood group, phone number, area and last donation date. Your number is never shown publicly.</p>
+      </div>
+      <form class="card grid2" id="regForm">
+        <div class="field"><label for="gName">Full name</label><input type="text" id="gName" required autocomplete="name"></div>
+        <div class="field"><label for="gGroup">Blood group</label><select id="gGroup" required></select></div>
+        <div class="field"><label for="gPhone">Phone number</label><input type="tel" id="gPhone" required inputmode="tel" placeholder="01XXXXXXXXX" pattern="01[0-9]{9}" title="11-digit Bangladesh mobile number, e.g. 01712345678"></div>
+        <div class="field"><label for="gArea">Area</label><select id="gArea" required></select></div>
+        <div class="field full"><label for="gLast">Last donation date <span class="muted">(leave empty if you have never donated)</span></label><input type="date" id="gLast"></div>
+        <label class="check full"><input type="checkbox" id="gConsent" required> I am 18–60 years old, weigh at least 50 kg, and agree to be contacted for urgent requests.</label>
+        <div class="full"><button class="btn red" type="submit">Register as donor</button></div>
+      </form>
+      <div id="regResult" aria-live="polite"></div>
+    </div>
+    <div class="card">
+      <h3>Who can receive from whom</h3>
+      <p class="muted" style="margin:8px 0 14px">Read across: the group you need, then the donor groups that can give to it.</p>
+      <div class="scroll"><table id="compTable" style="min-width:0"></table></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="banks">
+  <div class="wrap">
+    <div class="head">
+      <h2>Blood bank stock</h2>
+      <p>Units currently available at partner blood banks. Sample figures for the pilot demo.</p>
+    </div>
+    <div class="scroll"><table id="stockTable"></table></div>
+    <div class="legend">
+      <span><i style="background:var(--blood-soft)"></i>Low: under 5 units</span>
+      <span><i style="background:var(--warn-soft)"></i>Limited: 5–9 units</span>
+      <span><i style="background:var(--ok-soft)"></i>Good: 10 or more</span>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="guide">
+  <div class="wrap">
+    <div class="head">
+      <h2>Before you donate</h2>
+      <p>A short guide for first-time and returning donors.</p>
+    </div>
+    <ol class="day">
+      <li><span class="icon sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="8" width="24" height="32" rx="4"/><rect x="18" y="5" width="12" height="6" rx="2" fill="currentColor"/><path d="M18 21h12M18 28h12M18 34h7"/></svg></span><div><b>Register</b><span>Fill in a short form and show your ID.</span></div></li>
+      <li><span class="icon sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 26h9l4-10 6 20 5-14 3 4h13"/></svg></span><div><b>Quick health check</b><span>Pulse, blood pressure and haemoglobin.</span></div></li>
+      <li><span class="icon sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="14" width="20" height="26" rx="6"/><path d="M24 14V6h8"/><path d="M24 23s-4 4.500-4 7.500a4 4 0 0 0 8 0c0-3-4-7.500-4-7.500z" fill="currentColor" stroke="none"/></svg></span><div><b>Donate</b><span>About 10 minutes, seated comfortably.</span></div></li>
+      <li><span class="icon sm" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 14h22l-2 24a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3z"/><path d="M35 20h2a4.500 4.500 0 0 1 0 9h-3"/><path d="M19 8c0 2 2 2 2 4M27 8c0 2 2 2 2 4"/></svg></span><div><b>Rest and refresh</b><span>Drink water and have a snack for 15 minutes.</span></div></li>
+    </ol>
+    <div class="rules">
+      <div class="card"><h3>You can donate if</h3>
+        <ul><li>You are 18 to 60 years old</li><li>You weigh at least 50 kg</li><li>You feel well today</li><li>It has been 3 months or more since your last donation</li></ul></div>
+      <div class="card"><h3>Please wait if</h3>
+        <ul><li>You have a fever, cold or infection</li><li>You took antibiotics in the last week</li><li>You had a tattoo or surgery recently</li><li>You are pregnant or breastfeeding</li></ul></div>
+      <div class="card"><h3>On the day</h3>
+        <ul><li>Eat a meal and drink plenty of water</li><li>Bring a photo ID</li><li>Rest for 15 minutes afterwards</li><li>Avoid heavy lifting until the next day</li></ul></div>
+    </div>
+    <p class="note">This is general guidance. The blood bank's medical staff make the final decision on the day.</p>
+  </div>
+</section>
+
+<section class="block" id="admin">
+  <div class="wrap">
+    <div class="head">
+      <h2>Admin dashboard</h2>
+      <p>For the Star team. Manage donors, close requests and update stock. In the live version this page sits behind a login with role-based access.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="adm">
+      <div>
+        <h3 style="margin-bottom:10px">Emergency requests</h3>
+        <div class="scroll"><table id="admReq"></table></div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px">Update blood bank stock</h3>
+        <div class="scroll"><table id="admStock"></table></div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px">Registered donors</h3>
+        <div class="scroll"><table id="admDonors"></table></div>
+      </div>
+      <div><button class="btn ghost" id="resetBtn" type="button">Reset demo data</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap band">
+    <div>
+      <h2>Be someone's match today.</h2>
+      <p>Registering takes two minutes. Your phone number is never shown publicly.</p>
+      <a class="btn star" href="#register">Register as a donor</a>
+    </div>
+    <svg viewBox="0 0 120 120" role="img" aria-label="Blood drop with a star">
+      <circle cx="60" cy="62" r="52" fill="#fff" fill-opacity=".1"/>
+      <g transform="translate(24 8) scale(2.4)"><path d="M16 2C16 2 5 14.5 5 21a11 11 0 0 0 22 0C27 14.5 16 2 16 2z" fill="#fff"/><path d="M16 12.2l1.9 3.9 4.3.6-3.1 3 .8 4.3-3.9-2.1-3.9 2.1.8-4.3-3.1-3 4.3-.6z" fill="#B0122E"/></g>
+      <path transform="translate(20 26) scale(0.9)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/><path transform="translate(102 40) scale(0.7)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/><path transform="translate(98 98) scale(0.9)" d="M0-8L2-2 8 0 2 2 0 8-2 2-8 0-2-2z" fill="#F0B429"/>
+    </svg>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong style="color:var(--ink)">Blood Bridge</strong>
+    <p>Pilot project with Star, a university blood group. Built for CSC 5301 Project Management by Hosen Md Shahadat and Jannatul Ferdoush.</p>
+    <p>Donor data is minimal and used only to match blood requests. Sample donors and stock on this page are made up for the demo.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var GROUPS=['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+  var RECEIVE_FROM={'A+':['A+','A-','O+','O-'],'A-':['A-','O-'],'B+':['B+','B-','O+','O-'],'B-':['B-','O-'],
+               'AB+':['A+','A-','B+','B-','AB+','AB-','O+','O-'],'AB-':['A-','B-','AB-','O-'],'O+':['O+','O-'],'O-':['O-']};
+  var AREAS=['Dhanmondi','Gulshan','Mirpur','Mohammadpur','Uttara','Chattogram','Sylhet'];
+  var GAP=90; // days between donations
+  var DAY=864e5;
+  var KEY='blood-bridge-v1';
+
+  function daysAgo(n){return n==null?null:new Date(Date.now()-n*DAY).toISOString().slice(0,10)}
+  function seed(){
+    return {
+      donors:[
+        {id:1,name:'Tanvir Ahmed',group:'O+',phone:'01711000101',area:'Dhanmondi',last:daysAgo(140)},
+        {id:2,name:'Farzana Islam',group:'A+',phone:'01811000102',area:'Mirpur',last:daysAgo(200)},
+        {id:3,name:'Rafiul Karim',group:'B+',phone:'01911000103',area:'Uttara',last:daysAgo(30)},
+        {id:4,name:'Sadia Rahman',group:'O-',phone:'01611000104',area:'Dhanmondi',last:null},
+        {id:5,name:'Mahmudul Hasan',group:'AB+',phone:'01711000105',area:'Gulshan',last:daysAgo(95)},
+        {id:6,name:'Nusrat Sultana',group:'A-',phone:'01511000106',area:'Mohammadpur',last:daysAgo(120)},
+        {id:7,name:'Imran Hossain',group:'B-',phone:'01311000107',area:'Chattogram',last:daysAgo(180)},
+        {id:8,name:'Tasnim Akter',group:'O+',phone:'01711000108',area:'Uttara',last:daysAgo(60)},
+        {id:9,name:'Shafiq Chowdhury',group:'A+',phone:'01811000109',area:'Sylhet',last:daysAgo(300)},
+        {id:10,name:'Mim Jahan',group:'AB-',phone:'01911000110',area:'Mirpur',last:daysAgo(110)},
+        {id:11,name:'Arif Mahmud',group:'B+',phone:'01611000111',area:'Dhanmondi',last:daysAgo(240)},
+        {id:12,name:'Lubna Yasmin',group:'O+',phone:'01511000112',area:'Mirpur',last:daysAgo(150)},
+        {id:13,name:'Kamrul Islam',group:'O-',phone:'01711000113',area:'Gulshan',last:daysAgo(400)},
+        {id:14,name:'Samia Khan',group:'A+',phone:'01311000114',area:'Dhanmondi',last:daysAgo(15)}
+      ],
+      requests:[],
+      banks:[
+        {name:'Star Community Blood Desk',units:{'A+':14,'A-':3,'B+':11,'B-':2,'AB+':6,'AB-':1,'O+':18,'O-':4}},
+        {name:'City Hospital Blood Bank',units:{'A+':9,'A-':5,'B+':7,'B-':4,'AB+':3,'AB-':2,'O+':12,'O-':6}},
+        {name:'Red Crescent Youth Unit',units:{'A+':22,'A-':8,'B+':16,'B-':6,'AB+':10,'AB-':5,'O+':25,'O-':9}}
+      ],
+      nextId:15, nextReq:1001
+    };
+  }
+  var S;
+  try{var raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):seed();}catch(e){S=seed();}
+  if(!S||!S.donors){S=seed();}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+  function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function $(id){return document.getElementById(id)}
+  function daysSince(d){return d?Math.floor((Date.now()-new Date(d).getTime())/DAY):null}
+  function eligible(d){var n=daysSince(d.last);return n==null||n>=GAP}
+  function nextDate(d){var t=new Date(new Date(d.last).getTime()+GAP*DAY);return t.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+  function fillSelect(el,items,first){el.innerHTML=(first?'<option value="">'+first+'</option>':'')+items.map(function(i){return '<option>'+i+'</option>'}).join('')}
+
+  /* ---------- finder ---------- */
+  var selGroup=null;
+  var tiles=$('tiles');
+  tiles.innerHTML=GROUPS.map(function(g){return '<button type="button" class="tile" role="radio" aria-checked="false" data-g="'+g+'">'+g+'<small>needed</small></button>'}).join('');
+  tiles.addEventListener('click',function(e){
+    var b=e.target.closest('.tile'); if(!b) return;
+    selGroup=selGroup===b.dataset.g?null:b.dataset.g;
+    Array.prototype.forEach.call(tiles.children,function(t){t.setAttribute('aria-checked',String(t.dataset.g===selGroup))});
+    renderResults();
+  });
+  tiles.addEventListener('keydown',function(e){
+    var k=e.key; if(k!=='ArrowRight'&&k!=='ArrowLeft'&&k!=='ArrowDown'&&k!=='ArrowUp') return;
+    var arr=Array.prototype.slice.call(tiles.children); var i=arr.indexOf(document.activeElement); if(i<0) return;
+    e.preventDefault(); var n=(k==='ArrowRight'||k==='ArrowDown')?(i+1)%arr.length:(i-1+arr.length)%arr.length; arr[n].focus();
+  });
+  fillSelect($('areaSel'),AREAS,'All areas');
+  $('areaSel').addEventListener('change',renderResults);
+  $('compat').addEventListener('change',renderResults);
+
+  function match(group,area,useCompat){
+    var okGroups=useCompat?RECEIVE_FROM[group].slice():[group];
+    return S.donors.filter(function(d){
+      return okGroups.indexOf(d.group)>-1 && (!area||d.area===area);
+    });
+  }
+  function renderResults(){
+    var list=$('results'), sum=$('summary');
+    if(!selGroup){sum.textContent='Select a blood group to see available donors.';list.innerHTML='';return;}
+    var area=$('areaSel').value, compat=$('compat').checked;
+    var found=match(selGroup,area,compat);
+    var ready=found.filter(eligible);
+    found.sort(function(a,b){
+      return (eligible(b)-eligible(a))||((b.group===selGroup)-(a.group===selGroup));
+    });
+    var where=area?' in '+area:' across all areas';
+    sum.textContent=ready.length+' donor'+(ready.length===1?'':'s')+' ready for '+selGroup+where+(found.length>ready.length?' ('+(found.length-ready.length)+' resting)':'');
+    if(!found.length){
+      list.innerHTML='<li class="empty">No registered donors match '+esc(selGroup)+where+'.<br>Try all areas, or send an emergency request so the Star team can reach out.<br><a class="btn red" href="#request" id="jumpReq">Request '+esc(selGroup)+' blood</a></li>';
+      $('jumpReq').addEventListener('click',function(){$('rGroup').value=selGroup;});
+      return;
+    }
+    list.innerHTML=found.map(function(d){
+      var ok=eligible(d);
+      var status=ok?'<span class="pill ok">Ready to donate</span>':'<span class="pill wait">Available from '+nextDate(d)+'</span>';
+      var exact=d.group===selGroup?' <span class="pill exact">Exact match</span>':'';
+      var masked=d.phone.slice(0,5)+' ••• •••';
+      return '<li class="donor"><span class="gbadge" aria-label="Blood group '+d.group+'">'+d.group+'</span>'+
+        '<div><strong>'+esc(d.name)+'</strong><small>'+esc(d.area)+'</small> '+status+exact+'</div>'+
+        '<button class="btn sm" type="button" data-phone="'+d.phone+'" '+(ok?'':'disabled')+'>'+(ok?'Show number':'Resting')+'</button></li>';
+    }).join('');
+  }
+  $('results').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-phone]'); if(!b||b.disabled) return;
+    var p=b.dataset.phone;
+    b.outerHTML='<a class="btn sm red" style="text-decoration:none;display:inline-flex;align-items:center" href="tel:'+p+'">'+p+'</a>';
+  });
+
+  /* ---------- request ---------- */
+  fillSelect($('rGroup'),GROUPS,'Choose…');
+  fillSelect($('rArea'),AREAS,'Choose…');
+  var steps=[
+    ['Request received','Your details are saved.'],
+    ['Hospital check','Staff confirm the patient and hospital.'],
+    ['Matching donors alerted','Eligible donors get an SMS and email.'],
+    ['A donor accepts','You get their contact details.'],
+    ['Donation confirmed','The blood bank records the donation.']
+  ];
+  function drawFlow(done){
+    $('flow').innerHTML=steps.map(function(s,i){
+      return '<li class="'+(i<done?'done':'')+'"><span class="dot">'+(i<done?'✓':(i+1))+'</span><div><b>'+s[0]+'</b><span class="s">'+s[1]+'</span></div></li>';
+    }).join('');
+  }
+  drawFlow(0);
+  var timers=[];
+  $('reqForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    timers.forEach(clearTimeout); timers=[];
+    var group=$('rGroup').value, area=$('rArea').value;
+    if(!group||!area) return;
+    var sameArea=match(group,area,true).filter(eligible);
+    var anywhere=match(group,'',true).filter(eligible);
+    var notified=sameArea.length?sameArea:anywhere;
+    var req={id:'BB-'+(S.nextReq++),patient:$('rPatient').value.trim(),group:group,units:+$('rUnits').value,
+      urgency:$('rUrgency').value,hospital:$('rHospital').value.trim(),area:area,contact:$('rContact').value.trim(),
+      notified:notified.length,status:'Open',at:new Date().toISOString()};
+    S.requests.unshift(req); save(); renderAdmin();
+    $('reqResult').innerHTML='';
+    drawFlow(0);
+    [1,2,3].forEach(function(n,i){timers.push(setTimeout(function(){drawFlow(n)},500*(i+1)));});
+    timers.push(setTimeout(function(){
+      if(notified.length){
+        drawFlow(4);
+        var first=notified[0];
+        $('reqResult').innerHTML='<div class="alert">Request '+req.id+' sent. '+notified.length+' eligible donor'+(notified.length===1?'':'s')+' alerted'+(sameArea.length?' in '+esc(area):' (none in '+esc(area)+', so nearby areas were used)')+'. '+esc(first.name.split(' ')[0])+' accepted in this demo.</div>';
+      }else{
+        drawFlow(3);
+        $('reqResult').innerHTML='<div class="alert" style="background:var(--warn-soft);color:var(--warn)">Request '+req.id+' saved, but no eligible donor with a compatible group was found. The Star team has been flagged to reach out and check the blood banks.</div>';
+      }
+    },2200));
+    $('reqForm').reset(); $('rUnits').value=1;
+  });
+
+  /* ---------- register ---------- */
+  fillSelect($('gGroup'),GROUPS,'Choose…');
+  fillSelect($('gArea'),AREAS,'Choose…');
+  $('gLast').max=new Date().toISOString().slice(0,10);
+  $('regForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var d={id:S.nextId++,name:$('gName').value.trim(),group:$('gGroup').value,phone:$('gPhone').value.trim(),
+      area:$('gArea').value,last:$('gLast').value||null};
+    S.donors.unshift(d); save();
+    var msg=eligible(d)?'You are ready to donate now and will appear in donor searches.':'You will be listed as ready from '+nextDate(d)+'.';
+    $('regResult').innerHTML='<div class="alert">Thank you, '+esc(d.name.split(' ')[0])+'. You are registered as '+d.group+' in '+esc(d.area)+'. '+msg+'</div>';
+    $('regForm').reset(); renderResults(); renderAdmin();
+  });
+  var ct=$('compTable');
+  ct.innerHTML='<tr><th>Patient group</th><th>Can receive from</th></tr>'+GROUPS.map(function(g){
+    return '<tr><td><b>'+g+'</b></td><td style="text-align:left">'+RECEIVE_FROM[g].join(', ')+'</td></tr>';
+  }).join('');
+
+  /* ---------- stock ---------- */
+  function cls(n){return n<5?'low':(n<10?'mid':'good')}
+  function renderStock(){
+    $('stockTable').innerHTML='<tr><th>Blood bank</th>'+GROUPS.map(function(g){return '<th>'+g+'</th>'}).join('')+'</tr>'+
+      S.banks.map(function(b){return '<tr><td>'+esc(b.name)+'</td>'+GROUPS.map(function(g){return '<td class="u '+cls(b.units[g])+'">'+b.units[g]+'</td>'}).join('')+'</tr>'}).join('');
+    $('admStock').innerHTML='<tr><th>Blood bank</th>'+GROUPS.map(function(g){return '<th>'+g+'</th>'}).join('')+'</tr>'+
+      S.banks.map(function(b,bi){return '<tr><td>'+esc(b.name)+'</td>'+GROUPS.map(function(g){
+        return '<td><span class="stepper"><button type="button" aria-label="Decrease '+g+' at '+esc(b.name)+'" data-b="'+bi+'" data-g="'+g+'" data-d="-1">−</button><b style="min-width:1.6em">'+b.units[g]+'</b><button type="button" aria-label="Increase '+g+' at '+esc(b.name)+'" data-b="'+bi+'" data-g="'+g+'" data-d="1">+</button></span></td>';
+      }).join('')+'</tr>'}).join('');
+  }
+  $('admStock').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-b]'); if(!b) return;
+    var bank=S.banks[+b.dataset.b], g=b.dataset.g;
+    bank.units[g]=Math.max(0,bank.units[g]+(+b.dataset.d)); save(); renderStock();
+  });
+
+  /* ---------- admin ---------- */
+  function renderAdmin(){
+    var open=S.requests.filter(function(r){return r.status==='Open'}).length;
+    var ready=S.donors.filter(eligible).length;
+    var low=0; S.banks.forEach(function(b){GROUPS.forEach(function(g){if(b.units[g]<5)low++})});
+    $('stats').innerHTML=[[S.donors.length,'Registered donors'],[ready,'Ready to donate'],[open,'Open requests'],[low,'Low-stock entries']]
+      .map(function(s){return '<div class="stat"><b>'+s[0]+'</b><span>'+s[1]+'</span></div>'}).join('');
+    $('admReq').innerHTML='<tr><th>ID</th><th>Patient</th><th>Group</th><th>Units</th><th>Hospital</th><th>Alerted</th><th>Status</th><th></th></tr>'+
+      (S.requests.length?S.requests.map(function(r,i){
+        return '<tr><td>'+r.id+'</td><td>'+esc(r.patient)+'</td><td><b>'+r.group+'</b></td><td>'+r.units+'</td><td>'+esc(r.hospital)+', '+esc(r.area)+'</td><td>'+r.notified+'</td><td>'+
+        '<span class="pill '+(r.status==='Open'?'wait':'ok')+'">'+r.status+'</span></td><td>'+(r.status==='Open'?'<button class="btn sm ghost" type="button" data-fulfil="'+i+'">Mark fulfilled</button>':'')+'</td></tr>';
+      }).join(''):'<tr><td colspan="8" class="muted">No requests yet. Send one from the request form.</td></tr>');
+    $('admDonors').innerHTML='<tr><th>Name</th><th>Group</th><th>Area</th><th>Phone</th><th>Status</th><th></th></tr>'+
+      S.donors.map(function(d){
+        return '<tr><td>'+esc(d.name)+'</td><td><b>'+d.group+'</b></td><td>'+esc(d.area)+'</td><td>'+esc(d.phone)+'</td><td>'+
+        (eligible(d)?'<span class="pill ok">Ready</span>':'<span class="pill wait">Resting</span>')+'</td><td><button class="btn sm ghost" type="button" data-del="'+d.id+'" aria-label="Remove '+esc(d.name)+'">Remove</button></td></tr>';
+      }).join('');
+  }
+  $('admReq').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-fulfil]'); if(!b) return;
+    S.requests[+b.dataset.fulfil].status='Fulfilled'; save(); renderAdmin();
+  });
+  $('admDonors').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-del]'); if(!b) return;
+    var id=+b.dataset.del;
+    S.donors=S.donors.filter(function(d){return d.id!==id}); save(); renderAdmin(); renderResults();
+  });
+  $('resetBtn').addEventListener('click',function(){
+    S=seed(); save(); renderAll(); $('reqResult').innerHTML=''; $('regResult').innerHTML=''; drawFlow(0);
+  });
+
+  function renderAll(){renderResults();renderStock();renderAdmin();}
+  renderAll();
+})();
+</script>
+</body>
+</html>
